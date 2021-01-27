@@ -1,0 +1,10 @@
+#!/bin/sh
+
+#run intel-virtual-output
+$(intel-virtual-output)
+
+#set the second monitor as primary and right to eDP1
+xrandr --output VIRTUAL1 --auto --primary --left-of eDP1
+
+#reload bspwm to reset the desktops
+bspc wm -r

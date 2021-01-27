@@ -1,0 +1,71 @@
+#!/bin/sh
+
+WallPaperDir="$HOME/images/WLOP"
+# randomize background
+
+name=""
+contains=""
+
+function setBG() {
+    if [[ -z $name && -n $contains ]]; then
+        $(feh --bg-max --randomize $WallPaperDir/*$contains*)
+    elif [[ -z $contains && -n $name ]]; then
+        $(feh --bg-max $WallPaperDir/$name)
+    else
+        echo "No image specified, setting random wallpaper"
+        $(feh --bg-max --randomize ${WallPaperDir}/*)
+    fi
+
+    exit
+
+}
+
+
+function args() {
+    if [[ $# -eq 0 ]]; then
+        setBG
+    fi
+
+
+    for arg in "$@"; do
+
+        case "$1" in
+            -ls)
+                echo "Available wallpapers:"
+                ls ${WallPaperDir}
+                shift
+                ;;
+
+            -n)
+                echo "Setting wallpaper:"
+                echo "$2"
+                name="$2"
+                setBG
+                shift 2
+                ;;
+
+            -c)
+                echo "Setting wallpaper:"
+                ls ${WallPaperDir}/*${2}*
+                contains="$2"
+                setBG
+                shift 2
+                ;;
+
+            -h)
+                echo "Commands:"
+                echo " -ls "/path" -n image -c name"
+                shift
+                ;;
+
+            *)
+                echo "Error: unknown argument $1"
+                shift
+                ;;
+
+        esac
+    done
+}
+
+args $@
+
